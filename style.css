@@ -1,0 +1,65 @@
+/*
+Theme Name:     Middle Level
+Description:    Middle Level Commissioners Website Theme 
+Author:         Switch
+Author URI: 	http://weareswitch.com
+Template:       enfold
+Version:	1.0
+*/
+
+.board-select h3 {
+	color: #fff;
+}
+#header_main .dropdown_ul_available {
+	overflow: visible !important;
+}
+#header_main .board-select {
+	opacity: 1 !important;
+	display: block !important;
+	position: relative;
+	top: 10px;
+	padding-right: 20px;
+	width:100%;
+}
+
+@media only screen and (min-width : 990px) {
+	
+	#header_main .board-select {
+		float: right;
+		width:55%;
+		right: 0!important;
+	}
+}
+
+@media only screen and (min-width : 1152px) {
+	
+	#header_main .board-select {
+		width:80%;
+	}
+}
+
+#mobile-advanced .board-select h3,
+#header_main .board-select h3 {
+	color: #000;
+	margin-bottom: 5px;
+    font-size: 1.2em;
+}
+
+#header_main .board-select h3 {
+	margin-bottom: 0;
+}
+
+#header_main .board-select select {
+	width: 100%;
+	font-size: 0.95em;
+}
+
+#mobile-advanced .board-select {
+	padding: 10px 20px;
+    border-bottom: 1px solid #e1e1e1;
+}
+
+/* Hide on home page */
+.home #header_main .board-select {
+	display: none !important;
+}
