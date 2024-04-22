@@ -27,7 +27,6 @@ $args = array(
 );
 $pages = get_pages($args);
 
-
 	$current_page_id = get_the_ID();
     
     $output =  '<div class="board-select">';
@@ -71,10 +70,19 @@ $selected = isset( $values['is_board_page_select'] ) ? esc_attr( $values['is_boa
     <?php
 }
 
-
 add_action( 'save_post', 'cd_meta_box_save' );
 function cd_meta_box_save( $post_id )
 {
   if( isset( $_POST['is_board_page_select'] ) )
   update_post_meta( $post_id, 'is_board_page_select', esc_attr( $_POST['is_board_page_select'] ) );
 }
+
+// Allow json file mime type
+define('ALLOW_UNFILTERED_UPLOADS', true);
+function middlelevel_mime_types($mimes) {
+	$mimes['json'] = 'application/json';
+	$mimes['geojson'] = 'application/json';
+	return $mimes;
+}
+	
+add_filter('upload_mimes', 'middlelevel_mime_types');
