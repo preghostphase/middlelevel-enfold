@@ -12,6 +12,10 @@ import { createInfoWindow, closeInfoWindow } from "./mapInfoWindow.js";
       maxZoom: 16,
       styles: mapStyle,
       disableDefaultUI: true,
+      zoomControl: true,
+      zoomControlOptions: {
+        position: google.maps.ControlPosition.LEFT_TOP,
+      },
       gestureHandling: "greedy",
     };
     map = new google.maps.Map(document.getElementById("map"), mapOptions);
