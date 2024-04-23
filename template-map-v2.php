@@ -16,8 +16,16 @@ do_action('ava_after_main_title');
   <div id="map" class="interactive-map"></div>
 
   <aside class="map-sidebar">
+    <button class="map-sidebar__toggle" aria-label="Hide sidebar" data-sidebar-toggle>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+        <path d="M4 4m0 2a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z" />
+        <path d="M15 4v16" />
+        <path d="M9 10l2 2l-2 2" />
+      </svg>
+    </button>
     <header class="map-sidebar__header" style="margin-bottom: 0;">
-        <h2>Interactive Map</h2>
+        <h1>Interactive Map</h1>
         <p>Take a look at what we are doing in your area by selecting an option in the sidebar and clicking on the map to view more information.</p>
     </header>
     
@@ -28,7 +36,7 @@ do_action('ava_after_main_title');
         </div>
         
         <div class="map-sidebar__key">
-          <h3>Key</h3>
+          <h2>Key</h2>
           <div class="map-sidebar__key-item">
             <div class="map-sidebar__key-marker"></div>
             <span>Catchment Area</span>

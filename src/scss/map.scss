@@ -18,3 +18,16 @@
   -webkit-transition: all 0.4s cubic-bezier(0.215, 0.61, 0.355, 1);
   transition: all 0.4s cubic-bezier(0.215, 0.61, 0.355, 1);
 }
+
+.map-container.sidebar-closed {
+  .interactive-map {
+    max-width: 100%;
+  }
+
+  .map-sidebar {
+    transform: translateX($sidebar-desktop-width);
+  }
+  .map-sidebar__toggle svg {
+    transform: rotate(180deg);
+  }
+}

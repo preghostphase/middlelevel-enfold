@@ -16,9 +16,9 @@
 
 .info-window {
   width: 300px;
+  max-width: 100%;
   background: $color-white;
   overflow: hidden;
-  //@include removeChildMargins;
 
   * {
     color: $color-secondary;

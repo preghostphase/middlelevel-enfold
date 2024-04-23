@@ -8,7 +8,7 @@ import { createInfoWindow, closeInfoWindow } from "./mapInfoWindow.js";
   function initMap() {
     var mapOptions = {
       zoom: 2,
-      minZoom: 10,
+      minZoom: 9,
       maxZoom: 16,
       styles: mapStyle,
       disableDefaultUI: true,
@@ -281,8 +281,13 @@ import { createInfoWindow, closeInfoWindow } from "./mapInfoWindow.js";
   }
   initialize();
 
+  const sideBarToggleButton = document.querySelector("[data-sidebar-toggle]");
   const mlcInfoButton = document.querySelector("[data-load-mlc]");
   const idbInfoButton = document.querySelector("[data-load-idb]");
+
+  sideBarToggleButton.addEventListener("click", function () {
+    document.querySelector(".map-container").classList.toggle("sidebar-closed");
+  });
 
   mlcInfoButton.addEventListener("click", function () {
     initialize();
