@@ -215,6 +215,7 @@ export const styles = {
       strokeWeight: STROKE_WEIGHT,
       zIndex: 3,
       clickable: false,
+      visible: false,
     },
   },
   drain: {
@@ -253,13 +254,13 @@ export const styles = {
   },
   bankRaise: {
     default: {
-      strokeColor: "#ef6e3b",
+      strokeColor: "#3052a0",
       strokeOpacity: 1,
       strokeWeight: STROKE_WEIGHT,
       zIndex: 9,
     },
     hover: {
-      strokeColor: "#ef6e3b",
+      strokeColor: "#3052a0",
       strokeWeight: STROKE_HOVER_WEIGHT,
       zIndex: 10,
     },
@@ -267,7 +268,7 @@ export const styles = {
 };
 
 export function getStyle(feature, type = "default") {
-  if (feature.getProperty("IDB_name")) {
+  if (feature.getProperty("IDB_name") || feature.getProperty("FID")) {
     return type === "default" ? styles.drain.default : styles.drain.hover;
   }
 
@@ -302,7 +303,7 @@ export function setMapStyles(map) {
     if (feature.getGeometry().getType() === "Polygon") {
       return styles.catchment.default;
     }
-    if (feature.getProperty("IDB_name")) {
+    if (feature.getProperty("IDB_name") || feature.getProperty("FID")) {
       return styles.drain.default;
     }
 
@@ -315,7 +316,10 @@ export function setMapStyles(map) {
     ) {
       style = styles.deSiltingStarted.default;
     }
-    if (feature.getProperty("SiltFin?") !== "No") {
+    if (
+      feature.getProperty("SiltFin?") &&
+      feature.getProperty("SiltFin?") !== "No"
+    ) {
       style = styles.deSiltingFinished.default;
     }
     if (feature.getProperty("BankReq?") === "Yes") {

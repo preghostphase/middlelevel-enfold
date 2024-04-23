@@ -31,8 +31,10 @@ do_action('ava_after_main_title');
     
     <div class="map-sidebar__content">
         <div class="map-sidebar__actions">
-        <button class="map-sidebar__button" data-load-mlc>MLC Info</button> 
-        <button class="map-sidebar__button" data-load-idb>IDB Info</button>    
+          <label class="map-sidebar__switch" data-load-mlc>
+            <input type="checkbox">
+            <span class="map-sidebar__switch-slider"></span>
+          </label> <span class="map-sidebar__switch-label">Display Bank Raising</span>
         </div>
         
         <div class="map-sidebar__key">
@@ -40,10 +42,6 @@ do_action('ava_after_main_title');
           <div class="map-sidebar__key-item">
             <div class="map-sidebar__key-marker"></div>
             <span>Catchment Area</span>
-          </div>
-          <div class="map-sidebar__key-item">
-            <div class="map-sidebar__key-marker map-sidebar__key-marker--river"></div>
-            <span>River</span>
           </div>
           <div class="map-sidebar__key-item">
             <div class="map-sidebar__key-marker map-sidebar__key-marker--drain"></div>
@@ -74,14 +72,15 @@ do_action('ava_after_main_title');
 const catchmentAreaData = "<?php the_field('catchment_area'); ?>";
 </script>
 <?php endif; ?>
+<?php if( get_field('main_drains') ): ?>
+<script>
+const mainDrainsData = "<?php the_field('main_drains'); ?>";
+</script>
+<?php endif; ?>
 <?php if( get_field('mlc_info_data') ): ?>
 <script>
 const mlcInfoData = "<?php the_field('mlc_info_data'); ?>";
 </script>
 <?php endif; ?>
-<?php if( get_field('idb_info_data') ): ?>
-<script>
-const idbInfoData = "<?php the_field('idb_info_data'); ?>";
-</script>
-<?php endif; ?>
+
 <?php get_footer(); ?>

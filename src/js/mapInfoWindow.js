@@ -1,7 +1,7 @@
 const infowindow = new google.maps.InfoWindow();
 
 export function createInfoWindow(map, latLng, infoWindowData) {
-  if (!map || !infoWindowData.data) return;
+  if (!map || !infoWindowData || !infoWindowData.data) return;
 
   const { title, data } = infoWindowData;
   var html = `

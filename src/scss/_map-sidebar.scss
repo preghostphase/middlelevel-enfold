@@ -37,6 +37,13 @@
     cursor: pointer;
     z-index: 10;
   }
+
+  &__actions {
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #ccc;
+  }
+
   &__content {
     padding: $gutter;
   }
@@ -55,6 +62,12 @@
     }
     &.active {
       background-color: $color-primary;
+    }
+  }
+
+  &__key {
+    h2 {
+      font-size: 1.3rem;
     }
   }
 
@@ -82,7 +95,7 @@
       background-color: $color-green;
     }
     &--bank-raising {
-      background-color: $color-orange;
+      background-color: $color-blue;
     }
   }
 }

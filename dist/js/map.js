@@ -46,6 +46,38 @@ import { createInfoWindow, closeInfoWindow } from "./mapInfoWindow.js";
     zoom(map);
   }
 
+  async function loadMainDrains() {
+    try {
+      const geoString = await loadJSONData(mainDrainsData);
+      map.data.addGeoJson(geoString);
+
+      google.maps.event.addListener(map.data, "click", function (event) {
+        let infoWindowData;
+        if (event.feature.getProperty("FID")) {
+          infoWindowData = {
+            title: "Drain Info",
+            data: [
+              {
+                title: "Name",
+                detail: event.feature.getProperty("NAME") || "N/A",
+              },
+            ],
+          };
+        }
+
+        if (!infoWindowData) {
+          closeInfoWindow();
+          return;
+        }
+        createInfoWindow(map, event.latLng, infoWindowData);
+      });
+    } catch (e) {
+      console.log(e);
+      alert("Not a GeoJSON file!");
+    }
+    zoom(map);
+  }
+
   async function loadGeoJsonIdb() {
     try {
       const geoString = await loadJSONData(idbInfoData);
@@ -86,6 +118,13 @@ import { createInfoWindow, closeInfoWindow } from "./mapInfoWindow.js";
       if (!mlcInfoData) return;
 
       const geoString = await loadJSONData(mlcInfoData);
+
+      // filter geoString to only include features with properties of SiltStrt? or BankReq?
+      geoString.features = geoString.features.filter(
+        (feature) =>
+          feature.properties["SiltStrt?"] === "Yes" ||
+          feature.properties["BankReq?"] === "Yes"
+      );
       map.data.addGeoJson(geoString);
 
       google.maps.event.addListener(map.data, "click", function (event) {
@@ -120,11 +159,6 @@ import { createInfoWindow, closeInfoWindow } from "./mapInfoWindow.js";
               },
             ],
           };
-        }
-
-        if (!infoWindowData) {
-          closeInfoWindow();
-          return;
         }
         createInfoWindow(map, event.latLng, infoWindowData);
       });
@@ -192,7 +226,8 @@ import { createInfoWindow, closeInfoWindow } from "./mapInfoWindow.js";
       if (
         !(
           event.feature.getProperty("IDB_name") ||
-          event.feature.getProperty("BIMRef")
+          event.feature.getProperty("BIMRef") ||
+          event.feature.getProperty("FID")
         )
       )
         return;
@@ -273,33 +308,36 @@ import { createInfoWindow, closeInfoWindow } from "./mapInfoWindow.js";
     map.fitBounds(bounds);
   }
 
-  function initialize() {
+  async function initialize() {
     initMap();
-    loadCatchmentArea();
+    await loadMainDrains();
+    await loadCatchmentArea();
     addEventListeners();
     setMapStyles(map);
   }
   initialize();
 
   const sideBarToggleButton = document.querySelector("[data-sidebar-toggle]");
-  const mlcInfoButton = document.querySelector("[data-load-mlc]");
+  const mlcInfoButton = document.querySelector("[data-load-mlc] input");
   const idbInfoButton = document.querySelector("[data-load-idb]");
 
   sideBarToggleButton.addEventListener("click", function () {
     document.querySelector(".map-container").classList.toggle("sidebar-closed");
   });
 
-  mlcInfoButton.addEventListener("click", function () {
+  mlcInfoButton.addEventListener("change", function () {
     initialize();
-    loadGeoJsonMlc();
-    idbInfoButton.classList.remove("active");
-    this.classList.add("active");
+    if (this.checked) {
+      loadGeoJsonMlc();
+    }
   });
 
-  idbInfoButton.addEventListener("click", function () {
-    initialize();
-    loadGeoJsonIdb();
-    mlcInfoButton.classList.remove("active");
-    this.classList.add("active");
-  });
+  if (idbInfoButton) {
+    idbInfoButton.addEventListener("click", function () {
+      initialize();
+      loadGeoJsonIdb();
+      mlcInfoButton.classList.remove("active");
+      this.classList.add("active");
+    });
+  }
 })();
