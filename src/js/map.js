@@ -49,11 +49,17 @@ import { createInfoWindow, closeInfoWindow } from "./mapInfoWindow.js";
   async function loadMainDrains() {
     try {
       const geoString = await loadJSONData(mainDrainsData);
+
+      geoString.features.forEach((feature) => {
+        feature["id"] = `drain-${feature.properties["OBJECTID"]}`;
+        feature.properties["mainDrain"] = true;
+      });
+
       map.data.addGeoJson(geoString);
 
       google.maps.event.addListener(map.data, "click", function (event) {
         let infoWindowData;
-        if (event.feature.getProperty("FID")) {
+        if (event.feature.getProperty("mainDrain")) {
           infoWindowData = {
             title: "Drain Info",
             data: [
@@ -227,7 +233,7 @@ import { createInfoWindow, closeInfoWindow } from "./mapInfoWindow.js";
         !(
           event.feature.getProperty("IDB_name") ||
           event.feature.getProperty("BIMRef") ||
-          event.feature.getProperty("FID")
+          event.feature.getProperty("mainDrain")
         )
       )
         return;

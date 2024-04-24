@@ -268,7 +268,7 @@ export const styles = {
 };
 
 export function getStyle(feature, type = "default") {
-  if (feature.getProperty("IDB_name") || feature.getProperty("FID")) {
+  if (feature.getProperty("IDB_name") || feature.getProperty("mainDrain")) {
     return type === "default" ? styles.drain.default : styles.drain.hover;
   }
 
@@ -303,7 +303,7 @@ export function setMapStyles(map) {
     if (feature.getGeometry().getType() === "Polygon") {
       return styles.catchment.default;
     }
-    if (feature.getProperty("IDB_name") || feature.getProperty("FID")) {
+    if (feature.getProperty("IDB_name") || feature.getProperty("mainDrain")) {
       return styles.drain.default;
     }
 
