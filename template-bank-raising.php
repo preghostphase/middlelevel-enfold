@@ -128,19 +128,6 @@ do_action( 'ava_after_main_title' );
 
 AOS.init();
 
-$(function(){
-	var inputs = $('.input');
-	var paras = $('.timeline__main').find('.timeline__content');
-	inputs.click(function(){
-		var t = $(this),
-				ind = t.index(),
-				matchedPara = paras.eq(ind);
-		
-		t.add(matchedPara).addClass('active');
-		inputs.not(t).add(paras.not(matchedPara)).removeClass('active');
-	});
-});
-
 let dataPoints = document.getElementsByClassName('roadmap__main-item');
 let modal = document.querySelector('.roadmap-modal');
 let modalText = document.querySelector('.roadmap-modal__content-text');
