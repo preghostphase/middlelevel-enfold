@@ -37,6 +37,18 @@
     }
   }
 
+  &__sub-title {
+    font-size: 1rem;
+    color: $color-secondary;
+    padding: 3px 10px;
+    margin: 0;
+    border-bottom: 1px solid #ccc;
+    background-color: #f3f3f3;
+    &:last-of-type {
+      border-top: 1px solid #ccc;
+    }
+  }
+
   &__close {
     display: block;
     width: 24px;
@@ -56,15 +68,15 @@
   &__data {
     display: flex;
     flex-direction: column;
-    padding: 10px;
-    font-size: 0.9rem;
+    padding: 5px 10px 10px;
+    font-size: 0.85rem;
     &-row {
       display: flex;
       padding: 5px 0;
     }
     &-title {
       font-weight: bold;
-      width: 80px;
+      width: 130px;
     }
   }
 }

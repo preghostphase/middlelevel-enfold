@@ -49,15 +49,19 @@ do_action('ava_after_main_title');
           </div>
           <div class="map-sidebar__key-item">
             <div class="map-sidebar__key-marker map-sidebar__key-marker--desilting-started"></div>
-            <span>Desilting started</span>
+            <span>De-Silting started</span>
           </div>
           <div class="map-sidebar__key-item">
             <div class="map-sidebar__key-marker map-sidebar__key-marker--desilting-finished"></div>
-            <span>Desilting finished</span>
+            <span>De-Silting completed</span>
           </div>
           <div class="map-sidebar__key-item">
             <div class="map-sidebar__key-marker map-sidebar__key-marker--bank-raising"></div>
-            <span>Bank Raising</span>
+            <span>Bank Raising Required</span>
+          </div>
+          <div class="map-sidebar__key-item">
+            <div class="map-sidebar__key-marker map-sidebar__key-marker--complete"></div>
+            <span>All works complete</span>
           </div>
         </div>
     </div>
@@ -67,17 +71,17 @@ do_action('ava_after_main_title');
 
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCBI2uB1A1p231NrNhOZEXa--BAjhQoK5c"></script>
 <script type="module" src="<?php echo get_stylesheet_directory_uri() ?>/dist/js/map.js"></script>
-<?php if( get_field('catchment_area') ): ?>
+<?php if(get_field('catchment_area')): ?>
 <script>
 const catchmentAreaData = "<?php the_field('catchment_area'); ?>";
 </script>
 <?php endif; ?>
-<?php if( get_field('main_drains') ): ?>
+<?php if(get_field('main_drains')): ?>
 <script>
 const mainDrainsData = "<?php the_field('main_drains'); ?>";
 </script>
 <?php endif; ?>
-<?php if( get_field('mlc_info_data') ): ?>
+<?php if(get_field('mlc_info_data')): ?>
 <script>
 const mlcInfoData = "<?php the_field('mlc_info_data'); ?>";
 </script>

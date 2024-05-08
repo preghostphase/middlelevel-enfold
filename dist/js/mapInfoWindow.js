@@ -4,10 +4,14 @@ export function createInfoWindow(map, latLng, infoWindowData) {
   if (!map || !infoWindowData || !infoWindowData.data) return;
 
   const { title, data } = infoWindowData;
+  const deSiltingData = data[0];
+  const bankRaisingData = data[1];
+
   var html = `
             <div class='info-window'>
               <div class='info-window__header'>
               <h2>${title}</h2>
+              
               <button class='info-window__close' data-infowindow-close>
                 <svg version="1.0" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
                   viewBox="0 0 1436 1054" style="enable-background:new 0 0 1436 1054;" xml:space="preserve">
@@ -18,8 +22,14 @@ export function createInfoWindow(map, latLng, infoWindowData) {
               </button>
 
               </div>
+
+              ${
+                deSiltingData
+                  ? `<h3 class='info-window__sub-title'>${
+                      deSiltingData.title
+                    }</h3>
               <dl class='info-window__data'>
-                ${data
+                ${deSiltingData.data
                   .map((item) => {
                     return `
                     <div class='info-window__data-row'>
@@ -28,7 +38,27 @@ export function createInfoWindow(map, latLng, infoWindowData) {
                     </div>`;
                   })
                   .join("")}
-              </dl>
+              </dl>`
+                  : ""
+              }
+
+              ${
+                bankRaisingData
+                  ? `<h3 class='info-window__sub-title'>${
+                      bankRaisingData.title
+                    }</h3><dl class='info-window__data'>
+                ${bankRaisingData.data
+                  .map((item) => {
+                    return `
+                    <div class='info-window__data-row'>
+                        <dt class='info-window__data-title'>${item.title}: </dt>
+                        <dd class='info-window__data-detail'>${item.detail}</dd>
+                    </div>`;
+                  })
+                  .join("")}
+              </dl>`
+                  : ""
+              }
             </div>`;
   infowindow.setContent(html);
 

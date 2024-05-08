@@ -196,6 +196,15 @@ export const mapStyle = [
 const STROKE_WEIGHT = 3;
 const STROKE_HOVER_WEIGHT = 6;
 const STROKE_OPACITY = 1;
+var lineSymbol = {
+  path: "M 0,-1 0,1",
+  strokeOpacity: 1,
+  strokeWeight: 3,
+  scale: 3,
+  strokeColor: "#d63e2d",
+  anchor: new google.maps.Point(2, 0),
+};
+
 export const styles = {
   catchment: {
     default: {
@@ -220,19 +229,19 @@ export const styles = {
   },
   drain: {
     default: {
-      strokeColor: "#d63e2d",
+      strokeColor: "#3052a0",
       strokeWeight: STROKE_WEIGHT,
       strokeWeight: 2,
       zIndex: 4,
+      clickable: false,
     },
     hover: {
-      strokeWeight: STROKE_HOVER_WEIGHT,
-      zIndex: 5,
+      zIndex: 4,
     },
   },
   deSiltingStarted: {
     default: {
-      strokeColor: "#efe755",
+      strokeColor: "#ef6e3b",
       strokeWeight: STROKE_WEIGHT,
       zIndex: 5,
     },
@@ -243,7 +252,7 @@ export const styles = {
   },
   deSiltingFinished: {
     default: {
-      strokeColor: "#8dbf35",
+      strokeColor: "#efe755",
       strokeWeight: STROKE_WEIGHT,
       zIndex: 7,
     },
@@ -254,47 +263,136 @@ export const styles = {
   },
   bankRaise: {
     default: {
-      strokeColor: "#3052a0",
-      strokeOpacity: 1,
+      strokeColor: "#ffffff",
       strokeWeight: STROKE_WEIGHT,
-      zIndex: 9,
+      strokeOpacity: 1,
+      zIndex: 8,
+      icons: [
+        {
+          icon: { ...lineSymbol, anchor: new google.maps.Point(0, 0) },
+          offset: "10%",
+          repeat: "15px",
+        },
+      ],
     },
     hover: {
-      strokeColor: "#3052a0",
+      strokeColor: "#ffffff",
+      strokeWeight: STROKE_HOVER_WEIGHT,
+      zIndex: 8,
+    },
+  },
+  bankRaiseDesiltStarted: {
+    default: {
+      strokeColor: "#ef6e3b",
+      strokeWeight: STROKE_WEIGHT,
+      strokeOpacity: 1,
+      zIndex: 10,
+      icons: [
+        {
+          icon: lineSymbol,
+          offset: "10%",
+          repeat: "15px",
+        },
+      ],
+    },
+    hover: {
+      strokeColor: "#ef6e3b",
       strokeWeight: STROKE_HOVER_WEIGHT,
       zIndex: 10,
+    },
+  },
+  bankRaiseDeSiltingFinished: {
+    default: {
+      strokeColor: "#efe755",
+      strokeWeight: STROKE_WEIGHT,
+      strokeOpacity: 1,
+      zIndex: 10,
+      icons: [
+        {
+          icon: lineSymbol,
+          offset: "10%",
+          repeat: "15px",
+        },
+      ],
+    },
+    hover: {
+      strokeColor: "#efe755",
+      strokeWeight: STROKE_HOVER_WEIGHT,
+      zIndex: 10,
+    },
+  },
+  finished: {
+    default: {
+      strokeColor: "#8dbf35",
+      strokeWeight: STROKE_WEIGHT,
+      zIndex: 11,
+    },
+    hover: {
+      strokeWeight: STROKE_HOVER_WEIGHT,
+      zIndex: 11,
     },
   },
 };
 
 export function getStyle(feature, type = "default") {
+  let style;
+
   if (feature.getProperty("IDB_name") || feature.getProperty("mainDrain")) {
-    return type === "default" ? styles.drain.default : styles.drain.hover;
+    style = type === "default" ? styles.drain.default : styles.drain.hover;
   }
 
   if (
     feature.getProperty("SiltStrt?") === "Yes" &&
     feature.getProperty("SiltFin?") === "No"
   ) {
-    return type === "default"
-      ? styles.deSiltingStarted.default
-      : styles.deSiltingStarted.hover;
+    if (feature.getProperty("BankReq?") !== "Yes") {
+      style =
+        type === "default"
+          ? styles.deSiltingStarted.default
+          : styles.deSiltingStarted.hover;
+    } else {
+      style =
+        type === "default"
+          ? styles.bankRaiseDesiltStarted.default
+          : styles.bankRaiseDesiltStarted.hover;
+    }
   }
 
   if (
     feature.getProperty("SiltStrt?") === "Yes" &&
     feature.getProperty("SiltFin?") !== "No"
   ) {
-    return type === "default"
-      ? styles.deSiltingFinished.default
-      : styles.deSiltingFinished.hover;
+    if (feature.getProperty("BankReq?") !== "Yes") {
+      style =
+        type === "default"
+          ? styles.deSiltingFinished.default
+          : styles.deSiltingFinished.hover;
+    } else {
+      style =
+        type === "default"
+          ? styles.bankRaiseDeSiltingFinished.default
+          : styles.bankRaiseDeSiltingFinished.hover;
+    }
   }
 
-  if (feature.getProperty("BankReq?") === "Yes") {
-    return type === "default"
-      ? styles.bankRaise.default
-      : styles.bankRaise.hover;
+  if (
+    feature.getProperty("BankReq?") === "Yes" &&
+    feature.getProperty("SiltStrt?") !== "Yes"
+  ) {
+    style =
+      type === "default" ? styles.bankRaise.default : styles.bankRaise.hover;
   }
+
+  if (
+    feature.getProperty("SiltStrt?") === "Yes" &&
+    feature.getProperty("SiltFin?") === "Yes" &&
+    feature.getProperty("BankFin?") === "Yes" &&
+    feature.getProperty("BankReq?") !== "Yes"
+  ) {
+    style =
+      type === "default" ? styles.finished.default : styles.finished.hover;
+  }
+  return style;
 }
 
 export function setMapStyles(map) {
@@ -310,20 +408,42 @@ export function setMapStyles(map) {
     if (feature.getProperty("BIMRef")) {
       style = styles.river.default;
     }
+
     if (
       feature.getProperty("SiltStrt?") === "Yes" &&
       feature.getProperty("SiltFin?") === "No"
     ) {
-      style = styles.deSiltingStarted.default;
+      if (feature.getProperty("BankReq?") !== "Yes") {
+        style = styles.deSiltingStarted.default;
+      } else {
+        style = styles.bankRaiseDesiltStarted.default;
+      }
     }
+
     if (
       feature.getProperty("SiltFin?") &&
       feature.getProperty("SiltFin?") !== "No"
     ) {
-      style = styles.deSiltingFinished.default;
+      if (feature.getProperty("BankReq?") !== "Yes") {
+        style = styles.deSiltingFinished.default;
+      } else {
+        style = styles.bankRaiseDeSiltingFinished.default;
+      }
     }
-    if (feature.getProperty("BankReq?") === "Yes") {
+    if (
+      feature.getProperty("BankReq?") === "Yes" &&
+      feature.getProperty("SiltStrt?") !== "Yes"
+    ) {
       style = styles.bankRaise.default;
+    }
+
+    if (
+      feature.getProperty("SiltStrt?") === "Yes" &&
+      feature.getProperty("SiltFin?") === "Yes" &&
+      feature.getProperty("BankFin?") === "Yes" &&
+      feature.getProperty("BankReq?") !== "Yes"
+    ) {
+      style = styles.finished.default;
     }
     return style;
   });

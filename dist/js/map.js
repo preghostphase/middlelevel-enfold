@@ -135,35 +135,55 @@ import { createInfoWindow, closeInfoWindow } from "./mapInfoWindow.js";
 
       google.maps.event.addListener(map.data, "click", function (event) {
         let infoWindowData;
+        let deSiltingData;
+        let bankRaisingData;
+
         if (event.feature.getProperty("SiltStrt?") === "Yes") {
-          infoWindowData = {
+          deSiltingData = {
             title: "De-Silting",
             data: [
               {
-                title: "Start Date",
-                detail: event.feature.getProperty("SiltStrtDa") || "N/A",
+                title: "Planned Start Date",
+                detail: event.feature.getProperty("SiltStrtDa") || "",
               },
-              { title: "Started?", detail: "Yes" },
               {
                 title: "Finished?",
-                detail: event.feature.getProperty("SiltFin?") || "No",
+                detail:
+                  event.feature.getProperty("SiltFin?") === "No"
+                    ? ""
+                    : event.feature.getProperty("SiltFin?"),
               },
             ],
           };
-        } else if (event.feature.getProperty("BankReq?") === "Yes") {
-          infoWindowData = {
+        }
+
+        if (event.feature.getProperty("BankReq?") === "Yes") {
+          bankRaisingData = {
             title: "Bank Raising",
             data: [
               {
-                title: "Start Date",
-                detail: event.feature.getProperty("BankStrtDa") || "N/A",
+                title: "Raising Required",
+                detail: event.feature.getProperty("BankReq?") || "",
               },
-              { title: "Started?", detail: "Yes" },
               {
-                title: "Finished?",
-                detail: event.feature.getProperty("BankFin?") || "No",
+                title: "Planned Start Date",
+                detail: event.feature.getProperty("BankStrtDa") || "",
+              },
+              {
+                title: "Finished",
+                detail: event.feature.getProperty("BankFin?") || "",
               },
             ],
+          };
+        }
+
+        if (
+          event.feature.getProperty("SiltStrt?") === "Yes" ||
+          event.feature.getProperty("BankReq?") === "Yes"
+        ) {
+          infoWindowData = {
+            title: `${event.feature.getProperty("BIMRef")}`,
+            data: [deSiltingData, bankRaisingData],
           };
         }
         createInfoWindow(map, event.latLng, infoWindowData);
@@ -242,7 +262,7 @@ import { createInfoWindow, closeInfoWindow } from "./mapInfoWindow.js";
         selectedFeature.setProperty("selected", false);
         map.data.overrideStyle(
           selectedFeature,
-          getStyle(event.feature, "default")
+          getStyle(selectedFeature, "default")
         );
       }
       map.data.overrideStyle(event.feature, getStyle(event.feature, "hover"));

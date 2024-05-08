@@ -86,16 +86,20 @@
       background-color: $color-blue;
     }
     &--drain {
-      background-color: $color-primary;
+      background-color: $color-blue;
     }
     &--desilting-started {
-      background-color: $color-yellow;
+      background-color: $color-orange;
     }
     &--desilting-finished {
-      background-color: $color-green;
+      background-color: $color-yellow;
     }
     &--bank-raising {
-      background-color: $color-blue;
+      background-color: transparent;
+      border-top: 5px dashed $color-primary;
+    }
+    &--complete {
+      background-color: $color-green;
     }
   }
 }
