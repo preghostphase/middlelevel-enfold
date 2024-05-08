@@ -45,7 +45,7 @@ do_action('ava_after_main_title');
           </div>
           <div class="map-sidebar__key-item">
             <div class="map-sidebar__key-marker map-sidebar__key-marker--drain"></div>
-            <span>Drain</span>
+            <span>River</span>
           </div>
           <div class="map-sidebar__key-item">
             <div class="map-sidebar__key-marker map-sidebar__key-marker--desilting-started"></div>
