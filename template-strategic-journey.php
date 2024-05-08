@@ -63,6 +63,9 @@ do_action( 'ava_after_main_title' );
     </div>
 <?php endif; ?>
 
+<div class="theme-block theme-block--page-builder">
+    <?php the_content(); ?>
+</div>
 
 <div class="theme-block theme-block--roadmap">
     <div class="theme-block__wrapper">
@@ -106,13 +109,14 @@ do_action( 'ava_after_main_title' );
                         $columnEnd = get_sub_field('end_column');
                         $fullWidth = get_sub_field('full_width');
                         $colour = get_sub_field('colour');
+                        $arrow = get_sub_field('arrow_direction');
                     ?>
 
                     <?php if($columnStart) : ?>
                         <div class="roadmap__main-column">
                     <?php endif; ?>
 
-                    <div data-aos="fade-up" class="roadmap__main-item forest-green line-right <?php echo $progress; ?> <?php if($fullWidth) echo 'roadmap__main-item--full'; ?>">
+                    <div data-aos="fade-up" class="roadmap__main-item forest-green <?php echo $progress; ?> <?php if($fullWidth) echo 'roadmap__main-item--full'; ?>">
                         <div class="roadmap__main-item-image">
                             <span class="roadmap__main-item-progress"></span>
                             <img alt="" src="<?php echo $image; ?>"/>
@@ -133,6 +137,17 @@ do_action( 'ava_after_main_title' );
                             <?php endif; ?>
                         </div>
                     </div>
+                
+                    <?php if($arrow !== 'none') : ?>
+                        <div class="roadmap__main-arrow">
+                            <div class="roadmap__main-arrow-content <?php if($arrow == 'right') : ?>right<?php elseif($arrow == 'below-both') : ?>below-both<?php elseif($arrow == 'below') : ?>below<?php elseif($arrow == 'below-left') : ?>below-left<?php elseif($arrow == 'below-right') : ?>below-right<?php endif; ?>">
+                               
+
+
+                               
+                            </div>
+                        </div>
+                    <?php endif; ?>
 
                     <?php if($columnEnd) : ?>
                         </div>
@@ -163,7 +178,6 @@ do_action( 'ava_after_main_title' );
         </div>
     </div>
 </div>
-
 
 
 
@@ -223,9 +237,6 @@ modalClose.addEventListener('click', function(){
     modalImage.innerHTML = '';
     modalTitle.innerHTML = '';
 });
-
-
-
 
 </script>
 
