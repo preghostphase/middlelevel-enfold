@@ -1,6 +1,10 @@
 import { mapStyle, setMapStyles, getStyle } from "./mapStyles.js";
 import { createInfoWindow, closeInfoWindow } from "./mapInfoWindow.js";
 
+
+// State management for toggles
+let dataSelected = 'none';
+
 (function () {
   let map;
   let selectedFeature = null;
@@ -119,18 +123,38 @@ import { createInfoWindow, closeInfoWindow } from "./mapInfoWindow.js";
     }
   }
 
-  async function loadGeoJsonMlc() {
+  async function loadGeoJsonMlc(dataSelected) {
     try {
       if (!mlcInfoData) return;
 
       const geoString = await loadJSONData(mlcInfoData);
 
-      // filter geoString to only include features with properties of SiltStrt? or BankReq?
-      geoString.features = geoString.features.filter(
-        (feature) =>
-          feature.properties["SiltStrt?"] === "Yes" ||
-          feature.properties["BankReq?"] === "Yes"
-      );
+
+      if(dataSelected == 'bank'){
+          // filter geoString to only include features with properties of BankReq?
+          geoString.features = geoString.features.filter(
+            (feature) =>
+              feature.properties["BankReq?"] === "Yes"
+          );
+      } else if (dataSelected == 'silt'){
+          // filter geoString to only include features with properties of SiltStrt?
+          geoString.features = geoString.features.filter(
+            (feature) =>
+              feature.properties["SiltStrt?"] === "Yes"
+          );
+      } else if(dataSelected == 'both') {
+            // filter geoString to only include features with properties of SiltStrt? or BankReq?
+            geoString.features = geoString.features.filter(
+              (feature) =>
+                feature.properties["SiltStrt?"] === "Yes" ||
+                feature.properties["BankReq?"] === "Yes"
+            );
+            map.data.addGeoJson(geoString);
+      } else if(dataSelected == 'none'){
+         
+      }
+ 
+    
       map.data.addGeoJson(geoString);
 
       google.maps.event.addListener(map.data, "click", function (event) {
@@ -138,55 +162,132 @@ import { createInfoWindow, closeInfoWindow } from "./mapInfoWindow.js";
         let deSiltingData;
         let bankRaisingData;
 
-        if (event.feature.getProperty("SiltStrt?") === "Yes") {
-          deSiltingData = {
-            title: "De-Silting",
-            data: [
-              {
-                title: "Planned Start Date",
-                detail: event.feature.getProperty("SiltStrtDa") || "",
-              },
-              {
-                title: "Finished?",
-                detail:
-                  event.feature.getProperty("SiltFin?") === "No"
-                    ? ""
-                    : event.feature.getProperty("SiltFin?"),
-              },
-            ],
-          };
-        }
+
+        if(dataSelected == 'bank'){
+
+          if (event.feature.getProperty("BankReq?") === "Yes") {
+            bankRaisingData = {
+              title: "Bank Raising",
+              data: [
+                {
+                  title: "Raising Required",
+                  detail: event.feature.getProperty("BankReq?") || "",
+                },
+                {
+                  title: "Planned Start Date",
+                  detail: event.feature.getProperty("BankStrtDa") || "",
+                },
+                {
+                  title: "Finished",
+                  detail: event.feature.getProperty("BankFin?") || "",
+                },
+              ],
+            };
+          }
+
+          if (
+            event.feature.getProperty("BankReq?") === "Yes"
+          ) {
+            infoWindowData = {
+              title: `${event.feature.getProperty("BIMRef")}`,
+              data: [bankRaisingData],
+            };
+          }
+          createInfoWindow(map, event.latLng, infoWindowData);
+        
+        } else if (dataSelected == 'silt'){
+          
+          if (event.feature.getProperty("SiltStrt?") === "Yes") {
+            deSiltingData = {
+              title: "De-Silting",
+              data: [
+                {
+                  title: "Planned Start Date",
+                  detail: event.feature.getProperty("SiltStrtDa") || "",
+                },
+                {
+                  title: "Finished?",
+                  detail:
+                    event.feature.getProperty("SiltFin?") === "No"
+                      ? ""
+                      : event.feature.getProperty("SiltFin?"),
+                },
+              ],
+            };
+          }
+
+
+          if (
+            event.feature.getProperty("SiltStrt?") === "Yes"
+          ) {
+            infoWindowData = {
+              title: `${event.feature.getProperty("BIMRef")}`,
+              data: [deSiltingData],
+            };
+          }
+          createInfoWindow(map, event.latLng, infoWindowData);
+
+
+        } else if(dataSelected == 'both') {
 
         if (event.feature.getProperty("BankReq?") === "Yes") {
-          bankRaisingData = {
-            title: "Bank Raising",
-            data: [
-              {
-                title: "Raising Required",
-                detail: event.feature.getProperty("BankReq?") || "",
-              },
-              {
-                title: "Planned Start Date",
-                detail: event.feature.getProperty("BankStrtDa") || "",
-              },
-              {
-                title: "Finished",
-                detail: event.feature.getProperty("BankFin?") || "",
-              },
-            ],
-          };
+            bankRaisingData = {
+              title: "Bank Raising",
+              data: [
+                {
+                  title: "Raising Required",
+                  detail: event.feature.getProperty("BankReq?") || "",
+                },
+                {
+                  title: "Planned Start Date",
+                  detail: event.feature.getProperty("BankStrtDa") || "",
+                },
+                {
+                  title: "Finished",
+                  detail: event.feature.getProperty("BankFin?") || "",
+                },
+              ],
+            };
+          }
+
+
+          if (event.feature.getProperty("SiltStrt?") === "Yes") {
+            deSiltingData = {
+              title: "De-Silting",
+              data: [
+                {
+                  title: "Planned Start Date",
+                  detail: event.feature.getProperty("SiltStrtDa") || "",
+                },
+                {
+                  title: "Finished?",
+                  detail:
+                    event.feature.getProperty("SiltFin?") === "No"
+                      ? ""
+                      : event.feature.getProperty("SiltFin?"),
+                },
+              ],
+            };
+          }
+
+          if (
+            event.feature.getProperty("SiltStrt?") === "Yes" && event.feature.getProperty("BankReq?") === "Yes"
+          ) {
+            infoWindowData = {
+              title: `${event.feature.getProperty("BIMRef")}`,
+              data: [bankRaisingData, deSiltingData],
+            };
+          }
+          createInfoWindow(map, event.latLng, infoWindowData);
+        } else {
+          console.log('none moite');
         }
 
-        if (
-          event.feature.getProperty("SiltStrt?") === "Yes" ||
-          event.feature.getProperty("BankReq?") === "Yes"
-        ) {
-          infoWindowData = {
-            title: `${event.feature.getProperty("BIMRef")}`,
-            data: [deSiltingData, bankRaisingData],
-          };
-        }
-        createInfoWindow(map, event.latLng, infoWindowData);
+   
+
+      
+
+   
       });
     } catch (e) {
       console.log(e);
@@ -339,23 +440,47 @@ import { createInfoWindow, closeInfoWindow } from "./mapInfoWindow.js";
     await loadMainDrains();
     await loadCatchmentArea();
     addEventListeners();
-    setMapStyles(map);
+    setMapStyles(map, dataSelected);
   }
   initialize();
 
   const sideBarToggleButton = document.querySelector("[data-sidebar-toggle]");
   const mlcInfoButton = document.querySelector("[data-load-mlc] input");
+  const bankraisingInfoButton = document.querySelector("[data-load-bankraising] input");
+  const desiltingInfoButton = document.querySelector("[data-load-desilting] input");
   const idbInfoButton = document.querySelector("[data-load-idb]");
 
   sideBarToggleButton.addEventListener("click", function () {
     document.querySelector(".map-container").classList.toggle("sidebar-closed");
   });
 
-  mlcInfoButton.addEventListener("change", function () {
-    initialize();
-    if (this.checked) {
-      loadGeoJsonMlc();
+  function updateDataSelected() {
+    const isBankraisingChecked = bankraisingInfoButton.checked;
+    const isDesiltingChecked = desiltingInfoButton.checked;
+  
+    if (isBankraisingChecked && isDesiltingChecked) {
+      dataSelected = 'both';
+      loadGeoJsonMlc(dataSelected);
+    } else if (isBankraisingChecked) {
+      dataSelected = 'bank';
+      loadGeoJsonMlc(dataSelected);
+    } else if (isDesiltingChecked) {
+      dataSelected = 'silt';
+      loadGeoJsonMlc(dataSelected);
+    } else {
+      dataSelected = 'none';
     }
+  }
+  
+
+  bankraisingInfoButton.addEventListener("change", function () {
+    initialize();
+    updateDataSelected();
+  });
+
+  desiltingInfoButton.addEventListener("change", function () {
+    initialize();
+    updateDataSelected();
   });
 
   if (idbInfoButton) {

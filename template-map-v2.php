@@ -31,10 +31,15 @@ do_action('ava_after_main_title');
     
     <div class="map-sidebar__content">
         <div class="map-sidebar__actions">
-          <label class="map-sidebar__switch" data-load-mlc>
+          <label class="map-sidebar__switch" data-load-bankraising>
             <input type="checkbox">
             <span class="map-sidebar__switch-slider"></span>
           </label> <span class="map-sidebar__switch-label">Display Bank Raising</span>
+          <br>
+          <label class="map-sidebar__switch" data-load-desilting>
+            <input type="checkbox">
+            <span class="map-sidebar__switch-slider"></span>
+          </label> <span class="map-sidebar__switch-label">Display De-Silting</span>
         </div>
         
         <div class="map-sidebar__key">
@@ -45,23 +50,27 @@ do_action('ava_after_main_title');
           </div>
           <div class="map-sidebar__key-item">
             <div class="map-sidebar__key-marker map-sidebar__key-marker--drain"></div>
-            <span>River</span>
+            <span>Middle Level Watercourse</span>
           </div>
           <div class="map-sidebar__key-item">
             <div class="map-sidebar__key-marker map-sidebar__key-marker--desilting-started"></div>
-            <span>De-Silting started</span>
+            <span>De-Silting Started</span>
           </div>
           <div class="map-sidebar__key-item">
             <div class="map-sidebar__key-marker map-sidebar__key-marker--desilting-finished"></div>
-            <span>De-Silting completed</span>
+            <span>De-Silting Completed</span>
           </div>
           <div class="map-sidebar__key-item">
             <div class="map-sidebar__key-marker map-sidebar__key-marker--bank-raising"></div>
             <span>Bank Raising Required</span>
           </div>
           <div class="map-sidebar__key-item">
+            <div class="map-sidebar__key-marker map-sidebar__key-marker--bank-raising--complete"></div>
+            <span>Bank Raising Completed</span>
+          </div>
+          <div class="map-sidebar__key-item">
             <div class="map-sidebar__key-marker map-sidebar__key-marker--complete"></div>
-            <span>All works complete</span>
+            <span>All Works Complete</span>
           </div>
         </div>
     </div>
@@ -70,7 +79,7 @@ do_action('ava_after_main_title');
 </div>
 
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCBI2uB1A1p231NrNhOZEXa--BAjhQoK5c"></script>
-<script type="module" src="<?php echo get_stylesheet_directory_uri() ?>/dist/js/map.js"></script>
+<script type="module" src="<?php echo get_stylesheet_directory_uri() ?>/dist/js/bundle.js"></script>
 <?php if(get_field('catchment_area')): ?>
 <script>
 const catchmentAreaData = "<?php the_field('catchment_area'); ?>";
@@ -83,7 +92,8 @@ const mainDrainsData = "<?php the_field('main_drains'); ?>";
 <?php endif; ?>
 <?php if(get_field('mlc_info_data')): ?>
 <script>
-const mlcInfoData = "<?php the_field('mlc_info_data'); ?>";
+// const mlcInfoData = "<?php the_field('mlc_info_data'); ?>";
+const mlcInfoData = "<?php echo get_stylesheet_directory_uri() ?>/src/json/testdata.geojson"
 </script>
 <?php endif; ?>
 

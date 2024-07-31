@@ -4,8 +4,8 @@ $switch-height: 24px;
 .map-sidebar__switch {
   position: relative;
   display: inline-block;
-  width: $switch-width;
-  height: $switch-height;
+  width: 40px;
+  height: 24px;
 
   &-label {
     margin-left: 10px;
@@ -27,9 +27,9 @@ $switch-height: 24px;
   }
 
   input:checked + .map-sidebar__switch-slider:before {
-    -webkit-transform: translateX(calc($switch-height - 8px));
-    -ms-transform: translateX(calc($switch-height - 8px));
-    transform: translateX(calc($switch-height - 8px));
+    -webkit-transform: translateX(calc(24px - 8px));
+    -ms-transform: translateX(calc(24px - 8px));
+    transform: translateX(calc(24px - 8px));
   }
 
   &-slider {
@@ -40,15 +40,15 @@ $switch-height: 24px;
     right: 0;
     bottom: 0;
     background-color: #ccc;
-    border-radius: $switch-height;
+    border-radius: 24px;
     -webkit-transition: 0.4s;
     transition: 0.4s;
 
     &:before {
       position: absolute;
       content: "";
-      height: calc($switch-height - 8px);
-      width: calc($switch-height - 8px);
+      height: calc(24px - 8px);
+      width: calc(24px - 8px);
       left: 4px;
       bottom: 4px;
       border-radius: 50%;

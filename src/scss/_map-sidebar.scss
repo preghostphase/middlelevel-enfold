@@ -98,6 +98,10 @@
       background-color: transparent;
       border-top: 5px dashed $color-primary;
     }
+    &--bank-raising--complete {
+      background-color: transparent;
+      border-top: 5px dashed $color-green;
+    }
     &--complete {
       background-color: $color-green;
     }
