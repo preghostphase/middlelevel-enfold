@@ -425,6 +425,14 @@ export function setMapStyles(map, dataSelected) {
       ) {
         style = styles.bankRaiseFinished.default;
       }
+      
+      if(
+        feature.getProperty("BankReq?") !== "Yes" &&
+        feature.getProperty("BankFin?") === "Yes"
+      ) {
+        style = styles.bankRaiseFinished.default;
+      }
+
     } else if (dataSelected == 'silt'){
       // Desilt styles
       if(

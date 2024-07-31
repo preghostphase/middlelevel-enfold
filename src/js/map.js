@@ -134,7 +134,8 @@ let dataSelected = 'none';
           // filter geoString to only include features with properties of BankReq?
           geoString.features = geoString.features.filter(
             (feature) =>
-              feature.properties["BankReq?"] === "Yes"
+              feature.properties["BankReq?"] === "Yes" ||
+              feature.properties["BankFin?"] === "Yes"
           );
       } else if (dataSelected == 'silt'){
           // filter geoString to only include features with properties of SiltStrt?
@@ -147,7 +148,8 @@ let dataSelected = 'none';
             geoString.features = geoString.features.filter(
               (feature) =>
                 feature.properties["SiltStrt?"] === "Yes" ||
-                feature.properties["BankReq?"] === "Yes"
+                feature.properties["BankReq?"] === "Yes" ||
+                feature.properties["BankFin?"] === "Yes"
             );
             map.data.addGeoJson(geoString);
       } else if(dataSelected == 'none'){
@@ -165,7 +167,7 @@ let dataSelected = 'none';
 
         if(dataSelected == 'bank'){
 
-          if (event.feature.getProperty("BankReq?") === "Yes") {
+          if (event.feature.getProperty("BankReq?") === "Yes" || event.feature.getProperty("BankFin?") === "Yes") {
             bankRaisingData = {
               title: "Bank Raising",
               data: [
@@ -186,7 +188,7 @@ let dataSelected = 'none';
           }
 
           if (
-            event.feature.getProperty("BankReq?") === "Yes"
+            event.feature.getProperty("BankReq?") === "Yes" || event.feature.getProperty("BankFin?") === "Yes"
           ) {
             infoWindowData = {
               title: `${event.feature.getProperty("BIMRef")}`,
@@ -230,7 +232,7 @@ let dataSelected = 'none';
 
         } else if(dataSelected == 'both') {
 
-        if (event.feature.getProperty("BankReq?") === "Yes") {
+        if (event.feature.getProperty("BankReq?") === "Yes" || event.feature.getProperty("BankFin?") === "Yes") {
             bankRaisingData = {
               title: "Bank Raising",
               data: [
