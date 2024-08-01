@@ -160,10 +160,9 @@ let dataSelected = 'none';
       map.data.addGeoJson(geoString);
 
       google.maps.event.addListener(map.data, "click", function (event) {
-        let infoWindowData;
-        let deSiltingData;
-        let bankRaisingData;
-
+        let bankRaisingData = null;
+        let deSiltingData = null;
+        let infoWindowData = null;
 
         if(dataSelected == 'bank'){
 
@@ -232,57 +231,60 @@ let dataSelected = 'none';
 
         } else if(dataSelected == 'both') {
 
-        if (event.feature.getProperty("BankReq?") === "Yes" || event.feature.getProperty("BankFin?") === "Yes") {
+          // Check if Bank Raising is required or finished
+          if (event.feature.getProperty("BankReq?") === "Yes" || event.feature.getProperty("BankFin?") === "Yes") {
+            console.log('bank set');
             bankRaisingData = {
-              title: "Bank Raising",
-              data: [
-                {
-                  title: "Raising Required",
-                  detail: event.feature.getProperty("BankReq?") || "",
-                },
-                {
-                  title: "Planned Start Date",
-                  detail: event.feature.getProperty("BankStrtDa") || "",
-                },
-                {
-                  title: "Finished",
-                  detail: event.feature.getProperty("BankFin?") || "",
-                },
-              ],
+                title: "Bank Raising",
+                data: [
+                    {
+                        title: "Raising Required",
+                        detail: event.feature.getProperty("BankReq?") || "",
+                    },
+                    {
+                        title: "Planned Start Date",
+                        detail: event.feature.getProperty("BankStrtDa") || "",
+                    },
+                    {
+                        title: "Finished",
+                        detail: event.feature.getProperty("BankFin?") || "",
+                    },
+                ],
             };
           }
 
-
+          // Check if De-Silting is started
           if (event.feature.getProperty("SiltStrt?") === "Yes") {
+            console.log('desilt set');
             deSiltingData = {
-              title: "De-Silting",
-              data: [
-                {
-                  title: "Planned Start Date",
-                  detail: event.feature.getProperty("SiltStrtDa") || "",
-                },
-                {
-                  title: "Finished?",
-                  detail:
-                    event.feature.getProperty("SiltFin?") === "No"
-                      ? ""
-                      : event.feature.getProperty("SiltFin?"),
-                },
-              ],
+                title: "De-Silting",
+                data: [
+                    {
+                        title: "Planned Start Date",
+                        detail: event.feature.getProperty("SiltStrtDa") || "",
+                    },
+                    {
+                        title: "Finished?",
+                        detail: event.feature.getProperty("SiltFin?") === "No" ? "" : event.feature.getProperty("SiltFin?"),
+                    },
+                ],
             };
           }
 
-          if (
-            event.feature.getProperty("SiltStrt?") === "Yes" && event.feature.getProperty("BankReq?") === "Yes"
-          ) {
+          // Check if either bank raising or de-silting data is set to create the info window
+          if (bankRaisingData || deSiltingData) {
+            console.log('info window set');
             infoWindowData = {
-              title: `${event.feature.getProperty("BIMRef")}`,
-              data: [bankRaisingData, deSiltingData],
+                title: `${event.feature.getProperty("BIMRef")}`,
+                data: [bankRaisingData, deSiltingData].filter(data => data !== null),
             };
+
+            // Create the info window
+            createInfoWindow(map, event.latLng, infoWindowData);
           }
-          createInfoWindow(map, event.latLng, infoWindowData);
+          
         } else {
-          console.log('none moite');
+          console.log('no info window');
         }
 
    
@@ -365,10 +367,10 @@ let dataSelected = 'none';
         selectedFeature.setProperty("selected", false);
         map.data.overrideStyle(
           selectedFeature,
-          getStyle(selectedFeature, "default")
+          getStyle(selectedFeature, "default", dataSelected)
         );
       }
-      map.data.overrideStyle(event.feature, getStyle(event.feature, "hover"));
+      map.data.overrideStyle(event.feature, getStyle(event.feature, "hover", dataSelected));
 
       // add property to the feature to be able to use in the mouseover event
       event.feature.setProperty("selected", true);
@@ -382,6 +384,21 @@ let dataSelected = 'none';
       map.fitBounds(bounds);
     });
 
+      // Add mouseover and mouseout event listeners
+      google.maps.event.addListener(map.data, "mouseover", function (event) {
+        if (selectedFeature && selectedFeature !== event.feature) {
+          map.data.overrideStyle(selectedFeature, getStyle(selectedFeature, "default", dataSelected));
+        }
+        map.data.overrideStyle(event.feature, getStyle(event.feature, "hover", dataSelected));
+      });
+
+      google.maps.event.addListener(map.data, "mouseout", function (event) {
+        if (selectedFeature && selectedFeature !== event.feature) {
+          map.data.overrideStyle(selectedFeature, getStyle(selectedFeature, "default", dataSelected));
+        }
+        map.data.overrideStyle(event.feature, getStyle(event.feature, "default", dataSelected));
+      });
+
     // Attach click event listener using event delegation
     document.addEventListener("click", function (e) {
       if (e.target.matches("[data-infowindow-close]")) {
@@ -389,7 +406,7 @@ let dataSelected = 'none';
           selectedFeature.setProperty("selected", false);
           map.data.overrideStyle(
             selectedFeature,
-            getStyle(selectedFeature, "default")
+            getStyle(selectedFeature, "default", dataSelected)
           );
         }
 

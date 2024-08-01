@@ -4035,7 +4035,7 @@
         "BIMRef": "TEST",
         "Navigation": "navigable ML watercourses",
         "Length(m)": 1913,
-        "SiltStrt?": "No",
+        "SiltStrt?": "Yes",
         "SiltFin?": "No",
         "BankReq?": "Yes",
         "BankFin?": "Yes",
