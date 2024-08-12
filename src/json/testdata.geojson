@@ -4039,8 +4039,8 @@
         "SiltFin?": "No",
         "BankReq?": "Yes",
         "BankFin?": "Yes",
-        "SiltStrtDa": null,
-        "BankStrtDa": null
+        "SiltStrtDa": "9th May 2024",
+        "BankStrtDa": "4th March 2024"
       },
       "geometry": {
         "type": "MultiLineString",

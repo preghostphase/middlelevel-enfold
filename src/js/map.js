@@ -207,10 +207,10 @@ let dataSelected = 'none';
                   detail: event.feature.getProperty("SiltStrtDa") || "",
                 },
                 {
-                  title: "Finished?",
+                  title: "Finished",
                   detail:
                     event.feature.getProperty("SiltFin?") === "No"
-                      ? ""
+                      ? "No"
                       : event.feature.getProperty("SiltFin?"),
                 },
               ],
@@ -247,7 +247,7 @@ let dataSelected = 'none';
                     },
                     {
                         title: "Finished",
-                        detail: event.feature.getProperty("BankFin?") || "",
+                        detail: event.feature.getProperty("BankFin?") || "No",
                     },
                 ],
             };
@@ -264,8 +264,8 @@ let dataSelected = 'none';
                         detail: event.feature.getProperty("SiltStrtDa") || "",
                     },
                     {
-                        title: "Finished?",
-                        detail: event.feature.getProperty("SiltFin?") === "No" ? "" : event.feature.getProperty("SiltFin?"),
+                        title: "Finished",
+                        detail: event.feature.getProperty("SiltFin?") === "No" ? "No" : event.feature.getProperty("SiltFin?"),
                     },
                 ],
             };

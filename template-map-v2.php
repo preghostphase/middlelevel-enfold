@@ -78,7 +78,7 @@ do_action('ava_after_main_title');
   </aside>
 </div>
 
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCBI2uB1A1p231NrNhOZEXa--BAjhQoK5c"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBvzxAID0YATXLYGrNMnIQXsJBvSkz8ZjM"></script>
 <script type="module" src="<?php echo get_stylesheet_directory_uri() ?>/dist/js/bundle.js"></script>
 <?php if(get_field('catchment_area')): ?>
 <script>
