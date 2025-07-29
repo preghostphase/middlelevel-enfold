@@ -2,7 +2,7 @@
 const projectURL = "http://medway.local/",
 	browserAutoOpen = ! 1,
 	injectChanges = ! 0,
-	styleSRC = "./src/scss/map.scss",
+	styleSRC = "./src/scss/styles.scss",
 	styleDestination = "./dist/css/",
 	outputStyle = "compact",
 	errLogToConsole = ! 0,

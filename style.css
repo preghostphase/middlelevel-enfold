@@ -63,3 +63,9 @@ Version:	1.0
 .home #header_main .board-select {
 	display: none !important;
 }
+
+@media(min-width: 990px){
+	#header_main > .container > .inner-container > .logo {
+		padding: 10px 0;
+	}
+}

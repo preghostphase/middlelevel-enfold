@@ -86,3 +86,11 @@ function middlelevel_mime_types($mimes) {
 }
 	
 add_filter('upload_mimes', 'middlelevel_mime_types');
+
+
+function my_theme_enqueue_styles() {
+    wp_enqueue_style( 'my_theme_style', get_stylesheet_directory_uri() . '/dist/css/styles.css' );
+}
+add_action( 'wp_enqueue_scripts', 'my_theme_enqueue_styles' );
+
+
